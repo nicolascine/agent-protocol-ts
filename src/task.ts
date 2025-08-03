@@ -25,9 +25,11 @@ export class TaskManager {
 
   list(page = 1, pageSize = 10): { tasks: Task[], total: number } {
     const all = Array.from(this.tasks.values())
-    const start = (page - 1) * pageSize
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    const start = Math.max(0, (page - 1) * pageSize)
+    const end = Math.min(all.length, start + pageSize)
     return {
-      tasks: all.slice(start, start + pageSize),
+      tasks: all.slice(start, end),
       total: all.length,
     }
   }
